@@ -1,5 +1,5 @@
 # Tycoon
-Persona 5 : Royal has a card game that you can play with the other Phantom Thieves called Tycoon, which I enjoyed enough to want to program the rules for fun.
+Persona 5 : Royal has a card game that you can play with the other Phantom Thieves called Tycoon when in the Phantom Den, which I enjoyed enough to want to program the rules for fun.
 
 **Note: This code currently doesn't work and is a work in progress.**
 
