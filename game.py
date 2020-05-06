@@ -7,10 +7,7 @@ import constants
 THREE_OF_CLUBS = Card(3, constants.CLUBS)
 
 def create_shuffled_deck():
-	cards = []
-	for suit in constants.CARD_SUITS:
-		for val in constants.NORMAL_ORDERING:
-			cards.append(Card(val, suit))
+	cards = [Card(val, suit) for val, suit in zip(constants.NORMAL_ORDERING, constants.CARD_SUITS)]
 	random.shuffle(cards)
 	return cards
 
@@ -31,6 +28,8 @@ class Game:
 		cards = create_shuffled_deck()
 		num_of_players = len(self.players)
 		i = 0
+
+		#Deal cards by cycling through each player and giving them a card until are cards are dealed
 		for card in cards:
 			turn = i % num_of_players
 			self.players[turn].add_card(card)
