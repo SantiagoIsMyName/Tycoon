@@ -27,25 +27,34 @@ class Game:
 			i += 1
 
 	def play_game(self):
+		final_rankings = []
 		starting_player_index = self.start_round()
 		current_player_index = starting_player_index
-		while (not all(len(player.cards) == 0 for player in self.players)):
+		last_played_index = -1
+		while (len(self.players) > 1):
+			current_player = self.players[current_player_index]
+			if len(current_player.cards) == 0:
+				final_rankings.append(current_player)
+				self.players.remove(current_player)
+				last_played_index = last_played_index % len(self.players)
+			else: 
+				if last_played_index == current_player_index:
+					self.top_of_deck = None
+
+				card_to_play = current_player.play_card(self.top_of_deck)
+				if card_to_play:
+					self.top_of_deck = card_to_play
+					last_played_index = current_player_index
 			current_player_index = (current_player_index + 1) % len(self.players)
-			print(current_player_index)
-			if current_player_index == 0:
-				break
+		return final_rankings + self.players
 
 	def start_round(self):
 		self.top_of_deck = None
 		three_of_clubs = Card(3, constants.CLUBS)
 		try: starting_player_index, starting_player = next((i, player) for i, player in enumerate(self.players) if three_of_clubs in player.cards)
 		except: raise NameError("No 3 of clubs found")
-		print("The starting player is " + starting_player.name + " at index " + str(starting_player_index))
+		#print("The starting player is " + starting_player.name + " at index " + str(starting_player_index))
 		return starting_player_index
-
-	def play_card(self, player, card):
-		if self.top_of_deck is None or self.top_of_deck.val < card.val:
-			self.top_of_deck = card
 
 
 g = Game()
@@ -55,4 +64,6 @@ g.add_player(Player("c"))
 g.add_player(Player("d"))
 
 g.distribute_cards()
-g.play_game()
+rankings = g.play_game()
+for player in rankings:
+	print(player.name)
