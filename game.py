@@ -57,18 +57,17 @@ class Game:
 				top_of_pile = card_to_play
 				last_played_index = current_player_index
 
-				# Eight stop: Player who plays an 8 clears the pile, starts a new one
-				if card_to_play.val == 8:
-					top_of_pile = None
-
 				# If the current player has just played their last card, they are added to the rankings and no longer play
 				if len(current_player.cards) == 0:
 					final_rankings.append(current_player)
 					self.players.remove(current_player)
 					last_played_index = last_played_index % len(self.players)
 
-				if top_of_pile is None:
+				# Eight stop: Player who plays an 8 clears the pile, starts a new one
+				if card_to_play.val == 8:
+					top_of_pile = None
 					continue
+
 
 
 			current_player_index = (current_player_index + 1) % len(self.players)
