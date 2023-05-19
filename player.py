@@ -27,12 +27,13 @@ class Player:
 			cards_to_play = input("Type a card to play or type p to pass. If playing more than one card, split by commas and a space. \n")
 
 			# Pass logic
-			if cards_to_play == 'p':
+			if cards_to_play == 'p' or cards_to_play == "":
 				cards_to_play = None
 				break
 
 			# Card selecting verifying logic
 			else:
+				# Multi-card handling
 				if ", " in cards_to_play:
 					split_by_comma = cards_to_play.split(", ")
 
@@ -43,12 +44,15 @@ class Player:
 
 					split_by_space = [card.split(" ") for card in split_by_comma]
 					cards_to_play = [Card(card_value, card_suite) for card_value, card_suite in split_by_space]
+
+				#Single card handling
 				else:
 					cards_to_play = cards_to_play.split(" ")
 					card_value, card_suite = cards_to_play
 					cards_to_play = [Card(card_value, card_suite)]
 
-				new_card_val = cards_to_play[0].val
+				new_card_val = cards_to_play[0].val if cards_to_play else None
+				top_card_val = top_cards[0].val if top_cards else None
 				for c in cards_to_play:
 					if c.val != new_card_val:
 						print("Not all of the cards typed have the same value. Try again.")
@@ -60,12 +64,12 @@ class Player:
 						cards_to_play = None
 						break
 
-					if top_cards != None:
-						if not is_revolution and NORMAL_COMPARATOR[top_cards[0].val] >= NORMAL_COMPARATOR[cards_to_play[0].val]:
+					if top_cards:
+						if not is_revolution and NORMAL_COMPARATOR[top_card_val] >= NORMAL_COMPARATOR[c.val]:
 							print("One of the cards typed is not greater than the top card's value. Try again.")
 							cards_to_play = None
 							break
-						if is_revolution and NORMAL_COMPARATOR[top_cards[0].val] <= NORMAL_COMPARATOR[cards_to_play[0].val]:
+						if is_revolution and NORMAL_COMPARATOR[top_card_val] <= NORMAL_COMPARATOR[c.val]:
 							print("One of the cards typed is not smaller than the top card's value. Try again.")
 							cards_to_play = None
 							break
