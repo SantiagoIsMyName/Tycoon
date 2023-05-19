@@ -29,10 +29,10 @@ Persona 5 : Royal has a card game that you can play with the other Phantom Thiev
 - [x] Create basic single card round logic.
 - [x]	Implement the 8 stop rule.
 - [x] Add logic for multi-card round handling.
-- [] Add the Joker card handling.
+- [ ] Add the Joker card handling.
 - [x] Add the Revolution/Counter Revolution handling whenever 4 of a Kind are played at once.
 - [x] Display the end of round rankings.
-- [] Implement the card swapping after the rankings are determined.
-- [] Force the Tycoon to last in ranking if they don't win the subsequent round.
+- [ ] Implement the card swapping after the rankings are determined.
+- [ ] Force the Tycoon to last in ranking if they don't win the subsequent round.
 
 
