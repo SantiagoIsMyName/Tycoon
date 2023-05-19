@@ -23,16 +23,16 @@ Persona 5 : Royal has a card game that you can play with the other Phantom Thiev
 - If the Tycoon doesn't get 1st in the next round, they automatically become the Beggar for the next round.
 
 # Check-list for Completion
-[X] Add randomized card distribution.
-[X] Ensure the player with the 3 of Clubs plays first.
-[X] Implement the general card ordering hierarchy.
-[X] Create basic single card round logic.
-[X]	Implement the 8 stop rule.
-[X] Add logic for multi-card round handling.
-[] Add the Joker card handling.
-[X] Add the Revolution/Counter Revolution handling whenever 4 of a Kind are played at once.
-[X] Display the end of round rankings.
-[] Implement the card swapping after the rankings are determined.
-[] Force the Tycoon to last in ranking if they don't win the subsequent round.
+- [x] Add randomized card distribution.
+- [x] Ensure the player with the 3 of Clubs plays first.
+- [x] Implement the general card ordering hierarchy.
+- [x] Create basic single card round logic.
+- [x]	Implement the 8 stop rule.
+- [x] Add logic for multi-card round handling.
+- [] Add the Joker card handling.
+- [x] Add the Revolution/Counter Revolution handling whenever 4 of a Kind are played at once.
+- [x] Display the end of round rankings.
+- [] Implement the card swapping after the rankings are determined.
+- [] Force the Tycoon to last in ranking if they don't win the subsequent round.
 
 
