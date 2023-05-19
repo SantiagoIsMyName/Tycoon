@@ -42,85 +42,91 @@ class Game:
 		for p in self.players:
 			p.cards = sorted(p.cards, key = lambda card: (constants.NORMAL_COMPARATOR[card.val], card.suit))
 
+	def round_handling(self):
+		top_of_pile = None
+		is_revolution = False
+
+		round_results = []
+		current_player_index = starting_player_index(self.players)
+		last_played_index = -1
+
+		while (len(round_results) < len(self.players) - 1):
+			current_player = self.players[current_player_index]
+
+			# If it's the last played person's turn again (as in everyone else passes), the pile gets cleared
+			if last_played_index == current_player_index:
+				top_of_pile = None
+
+			#If player is already done, skip them.
+			if current_player in round_results:
+				current_player_index = (current_player_index + 1) % len(self.players)
+				continue
+
+			cards_to_play = current_player.play_cards(top_of_pile, is_revolution)
+
+			# Revolution state handling
+			if cards_to_play != None and len(cards_to_play) == 4:
+				is_revolution = not is_revolution
+				if is_revolution:
+					print("REVOLUTION!")
+				else:
+					print("COUNTER-REVOLUTION!")
+
+			# If the player decided to play a card, it replaces the top card
+			if cards_to_play:
+				top_of_pile = cards_to_play
+				last_played_index = current_player_index
+
+				# If the current player has just played their last card, they are added to the rankings and no longer play
+				if len(current_player.cards) == 0:
+					round_results.append(current_player)
+					print("Player " + current_player.name + " has used all their cards!")
+					print("____________________")
+
+				# Eight stop: Player who plays an 8 clears the pile, starts a new one, continue is so we don't increment current_player_index
+				if all(c.val == "8" for c in cards_to_play):
+					top_of_pile = None
+					continue
+
+
+			current_player_index = (current_player_index + 1) % len(self.players)
+
+		# Add last player (didn't use all cards, so not in round_results)
+		for player in self.players:
+			if player not in round_results:
+				round_results.append(player)
+				break
+
+		return round_results
+
+	def process_round_results(self, round_results):
+		# Calculate ranking points
+		max_win_points = 30
+		for i, player in enumerate(round_results):
+			self.score_map[player.name] += (max_win_points - 10 * i)
+
+		# Current scores
+		print("Round over!")
+		print("____________________")
+		print("Current rankings:")
+		self.leaderboard = sorted(self.score_map.items(), key = lambda x: x[1], reverse = True)
+		for name, score in self.leaderboard:
+			print(name + " scored " + str(score))
+		print("____________________")
+
+
 	def play_game_with_rounds(self, rounds_to_play):
 		number_of_rounds_played = 0
-		final_rankings = {p.name : 0 for p in self.players}
+		self.score_map = {p.name : 0 for p in self.players}
 
 		while number_of_rounds_played < rounds_to_play:
 			self.distribute_cards()
-
-			top_of_pile = None
-			is_revolution = False
-
-			current_rankings = []
-			current_player_index = starting_player_index(self.players)
-			last_played_index = -1
-
-			while (len(current_rankings) < len(self.players) - 1):
-				current_player = self.players[current_player_index]
-
-				# If it's the last played person's turn again (as in everyone else passes), the pile gets cleared
-				if last_played_index == current_player_index:
-					top_of_pile = None
-
-				#If player is already done, skip them.
-				if current_player in current_rankings:
-					current_player_index = (current_player_index + 1) % len(self.players)
-					continue
-
-				cards_to_play = current_player.play_cards(top_of_pile, is_revolution)
-
-				# Revolution state handling
-				if cards_to_play != None and len(cards_to_play) == 4:
-					is_revolution = not is_revolution
-					if is_revolution:
-						print("REVOLUTION!")
-					else:
-						print("COUNTER-REVOLUTION!")
-
-				# If the player decided to play a card, it replaces the top card
-				if cards_to_play:
-					top_of_pile = cards_to_play
-					last_played_index = current_player_index
-
-					# If the current player has just played their last card, they are added to the rankings and no longer play
-					if len(current_player.cards) == 0:
-						current_rankings.append(current_player)
-						print("Player " + current_player.name + " has used all their cards!")
-						print("____________________")
-
-					# Eight stop: Player who plays an 8 clears the pile, starts a new one, continue is so we don't increment current_player_index
-					if all(c.val == "8" for c in cards_to_play):
-						top_of_pile = None
-						continue
-
-
-				current_player_index = (current_player_index + 1) % len(self.players)
-
-			# Add last player (didn't use all cards, so not in current_rankings)
-			for player in self.players:
-				if player not in current_rankings:
-					current_rankings.append(player)
-					break
-
-			# Calculate ranking points
-			max_win_points = 30
-			for i, player in enumerate(current_rankings):
-				final_rankings[player.name] += (max_win_points - 10 * i)
-
-			# Current scores
-			print("Round over!")
-			print("____________________")
-			print("Current rankings:")
-			leaderboard = sorted(final_rankings.items(), key = lambda x: x[1], reverse = True)
-			for name, score in leaderboard:
-				print(name + " scored " + str(score))
-
+			round_results = self.round_handling()
+			self.process_round_results(round_results)
 			number_of_rounds_played += 1
-			print("____________________")
 
 		print("GAME OVER!")
-		return final_rankings
+		return self.leaderboard
 
 
 g = Game()
