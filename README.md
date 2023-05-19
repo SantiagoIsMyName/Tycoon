@@ -1,8 +1,6 @@
 # Tycoon
 Persona 5 : Royal has a card game that you can play with the other Phantom Thieves called Tycoon when in the Phantom Den, which I enjoyed enough to want to program the rules for fun.
 
-**Note: This code currently doesn't work and is a work in progress.**
-
 # The general rules of Tycoon are:
 - Card value ordering is 3 < 4 < 5 ... < 10 < J < Q < K < A < 2.
 - The player who has the 3 of Clubs plays first and must play it (by itself or as a group of 3s).
@@ -29,7 +27,6 @@ Persona 5 : Royal has a card game that you can play with the other Phantom Thiev
 - [x] Add logic for multi-card round handling.
 - [x] Add the Revolution/Counter Revolution handling whenever 4 of a Kind are played at once.
 - [x] Display the end of round rankings.
+- [x] Add multiple rounds.
 - [ ] Implement the card swapping after the rankings are determined.
 - [ ] Force the Tycoon to last in ranking if they don't win the subsequent round.
-
-

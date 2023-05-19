@@ -9,6 +9,9 @@ class Player:
 	def add_card(self, card):
 		self.cards.append(card)
 
+	def clear_cards(self):
+		self.cards = []
+
 	def play_cards(self, top_cards, is_revolution):
 		# Display relevant information
 		print("Current player: " + self.name)
