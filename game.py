@@ -4,7 +4,7 @@ from card import Card
 import random
 import constants
 
-THREE_OF_CLUBS = Card(3, constants.CLUBS)
+THREE_OF_CLUBS = Card("3", constants.CLUBS)
 
 def create_shuffled_deck():
 	cards = [Card(val, suit) for val in constants.NORMAL_ORDERING for suit in constants.CARD_SUITS]
@@ -35,10 +35,15 @@ class Game:
 			self.players[turn].add_card(card)
 			i += 1
 
+		for p in self.players:
+			p.cards = sorted(p.cards, key = lambda card: (constants.NORMAL_COMPARATOR[card.val], card.suit))
+
 	def play_game(self):
 		self.distribute_cards()
 
 		top_of_pile = None
+		is_revolution = False
+
 		final_rankings = []
 		current_player_index = starting_player_index(self.players)
 		last_played_index = -1
@@ -50,11 +55,17 @@ class Game:
 			if last_played_index == current_player_index:
 				top_of_pile = None
 
-			card_to_play = current_player.play_card(top_of_pile)
+			cards_to_play = current_player.play_cards(top_of_pile, is_revolution)
+			if cards_to_play != None and len(cards_to_play) == 4:
+				is_revolution = not is_revolution
+				if is_revolution:
+					print("REVOLUTION!")
+				else:
+					print("COUNTER-REVOLUTION!")
 
 			# If the player decided to play a card, it replaces the top card
-			if card_to_play:
-				top_of_pile = card_to_play
+			if cards_to_play:
+				top_of_pile = cards_to_play
 				last_played_index = current_player_index
 
 				# If the current player has just played their last card, they are added to the rankings and no longer play
@@ -63,11 +74,10 @@ class Game:
 					self.players.remove(current_player)
 					last_played_index = last_played_index % len(self.players)
 
-				# Eight stop: Player who plays an 8 clears the pile, starts a new one
-				if card_to_play.val == 8:
+				# Eight stop: Player who plays an 8 clears the pile, starts a new one, continue is so we don't increment current_player_index
+				if all(c.val == "8" for c in cards_to_play):
 					top_of_pile = None
 					continue
-
 
 
 			current_player_index = (current_player_index + 1) % len(self.players)
@@ -76,11 +86,12 @@ class Game:
 
 
 g = Game()
-g.add_player(Player("a"))
-g.add_player(Player("b"))
-g.add_player(Player("c"))
-g.add_player(Player("d"))
+g.add_player(Player("A"))
+g.add_player(Player("B"))
+g.add_player(Player("C"))
+g.add_player(Player("D"))
 
 rankings = g.play_game()
-for player in rankings:
-	print(player.name)
+print("GAME OVER!")
+for i, player in enumerate(rankings):
+	print(player.name + " came in " + str(i + 1))

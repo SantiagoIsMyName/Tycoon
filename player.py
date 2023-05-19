@@ -1,4 +1,5 @@
 from constants import NORMAL_COMPARATOR
+from card import Card
 
 class Player:
 	def __init__(self, name):
@@ -8,17 +9,70 @@ class Player:
 	def add_card(self, card):
 		self.cards.append(card)
 
-	def play_card(self, current_card):
-		# If it's an empty pile, play any card you want (for now, smallest value)
-		if current_card is None: 
-			card_to_play = min(self.cards, key = lambda card: NORMAL_COMPARATOR[card.val])
+	def play_cards(self, top_cards, is_revolution):
+		# Display relevant information
+		print("Current player: " + self.name)
+		if top_cards != None:
+			print("Current top card(s): " + str([str(c.val) + " " + str(c.suit) for c in top_cards]))
+		else:
+			print("No top card. This is the start of a new stack")
+		print("Card(s) available: " + str([c.val + " " + c.suit for c in self.cards]))
 
-		# If pile isn't empty, play any card larger than the current top card (for now, smallest value that satisfies this)
-		else: 
-			card_to_play = next((card for card in self.cards if NORMAL_COMPARATOR[card.val] > NORMAL_COMPARATOR[current_card.val]), None)
+		cards_to_play = None
+		# Keep looping until a valid card is selected or the player passes
+		while cards_to_play == None:
+			cards_to_play = input("Type a card to play or type p to pass. If playing more than one card, split by commas and a space. \n")
+
+			# Pass logic
+			if cards_to_play == 'p':
+				cards_to_play = None
+				break
+
+			# Card selecting verifying logic
+			else:
+				if ", " in cards_to_play:
+					split_by_comma = cards_to_play.split(", ")
+
+					if top_cards != None and len(split_by_comma) != len(top_cards):
+						print("The number of cards typed does not match the number of cards on the top. Try again.")
+						cards_to_play = None
+						continue
+
+					split_by_space = [card.split(" ") for card in split_by_comma]
+					cards_to_play = [Card(card_value, card_suite) for card_value, card_suite in split_by_space]
+				else:
+					cards_to_play = cards_to_play.split(" ")
+					card_value, card_suite = cards_to_play
+					cards_to_play = [Card(card_value, card_suite)]
+
+				new_card_val = cards_to_play[0].val
+				for c in cards_to_play:
+					if c.val != new_card_val:
+						print("Not all of the cards typed have the same value. Try again.")
+						cards_to_play = None
+						break
+
+					if c not in self.cards:
+						print("One of the cards typed does not exist in this player's hand. Try again.")
+						cards_to_play = None
+						break
+
+					if top_cards != None:
+						if not is_revolution and NORMAL_COMPARATOR[top_cards[0].val] >= NORMAL_COMPARATOR[cards_to_play[0].val]:
+							print("One of the cards typed is not greater than the top card's value. Try again.")
+							cards_to_play = None
+							break
+						if is_revolution and NORMAL_COMPARATOR[top_cards[0].val] <= NORMAL_COMPARATOR[cards_to_play[0].val]:
+							print("One of the cards typed is not smaller than the top card's value. Try again.")
+							cards_to_play = None
+							break
+
 
 		# If you have a card to play, remove it from your hand
-		if card_to_play:
-			self.cards.remove(card_to_play)
+		if cards_to_play:
+			for c in cards_to_play:
+				self.cards.remove(c)
 
-		return card_to_play
+		print("____________________")
+
+		return cards_to_play
