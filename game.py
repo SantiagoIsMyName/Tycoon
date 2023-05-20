@@ -64,7 +64,7 @@ class Game:
 		remaining_players = self.players[::]
 		current_player_index = starting_player_index(self.players)
 		last_played_index = -1
-		
+
 		player_was_removed = False
 
 		while remaining_players:
@@ -208,10 +208,11 @@ class Game:
 		while number_of_rounds_played < rounds_to_play:
 			self.distribute_cards()
 
-			if number_of_rounds_played > 0:
-				self.card_swapping(round_map[number_of_rounds_played - 1])
+			previous_round_results = round_map.get(number_of_rounds_played - 1, None)
+			if previous_round_results:
+				self.card_swapping(previous_round_results)
 
-			round_results = self.round_handling(round_map.get(number_of_rounds_played - 1, None))
+			round_results = self.round_handling(previous_round_results)
 			score_map = self.process_round_results(round_results, score_map)
 			round_map = {number_of_rounds_played : round_results}
 			number_of_rounds_played += 1
