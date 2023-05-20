@@ -182,5 +182,7 @@ g.add_player(Player("B"))
 g.add_player(Player("C"))
 g.add_player(Player("D"))
 
-rankings = g.play_game_with_rounds(2)
+rounds_requested = int(input("How many rounds would you like to play? \n"))
+print("____________________")
+rankings = g.play_game_with_rounds(rounds_requested)
 
