@@ -118,8 +118,8 @@ class Game:
 
 			winner_title = "Tycoon" if i == 0 else "Rich"
 			loser_title = "Beggar" if i == 0 else "Poor"
-			print(f"{winner_title} cards: " + str([str(c.val) + " " + str(c.suit) for c in winner.cards]))
-			print(f"{loser_title} cards: " + str([str(c.val) + " " + str(c.suit) for c in loser.cards]))
+			print(f"{winner_title} (Player {winner.name}) cards: " + str([str(c.val) + " " + str(c.suit) for c in winner.cards]))
+			print(f"{loser_title} (Player {loser.name}) cards: " + str([str(c.val) + " " + str(c.suit) for c in loser.cards]))
 
 			num_to_exchange = "two" if i == 0 else "one"
 			while True:
@@ -135,8 +135,8 @@ class Game:
 					lengths_match = len(winner_list) == 1 and len(loser_list) == 1
 
 				# Check that all inputed cards are indeed in each player's hands
-				loser_has_cards = all([c in loser.cards for c in winner_gain])
-				winner_has_cards = all([c in winner.cards for c in loser_gain])
+				loser_has_cards = all([c in loser.cards for c in winner_list])
+				winner_has_cards = all([c in winner.cards for c in loser_list])
 
 				# If lenghts are correct and all cards are present, exit
 				if lengths_match and loser_has_cards and winner_has_cards:
