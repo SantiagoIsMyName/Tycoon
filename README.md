@@ -1,5 +1,5 @@
 # Tycoon
-Persona 5 : Royal has a card game that you can play with the other Phantom Thieves called Tycoon when in the Phantom Den, which I enjoyed enough to want to program the rules for fun.
+Persona 5 : Royal has a card game that you can play with the other Phantom Thieves called Tycoon (known as Daifugo in Japan) when in the Phantom Den, which I enjoyed enough to want to program the rules for fun.
 
 # The general rules of Tycoon are:
 - Card value ordering is 3 < 4 < 5 ... < 10 < J < Q < K < A < 2.
