@@ -53,24 +53,30 @@ class Game:
 		for p in self.players:
 			p.cards = sorted(p.cards, key = lambda card: (constants.NORMAL_COMPARATOR[card.val], card.suit))
 
-	def round_handling(self):
+	def round_handling(self, previous_round_results):
 		top_of_pile = None
 		is_revolution = False
 
+		prior_tycoon = previous_round_results[0] if previous_round_results else None
+		prior_tycoon_lost = False
+
 		round_results = []
+		remaining_players = self.players[::]
 		current_player_index = starting_player_index(self.players)
 		last_played_index = -1
+		
+		player_was_removed = False
 
-		while (len(round_results) < len(self.players) - 1):
-			current_player = self.players[current_player_index]
+		while remaining_players:
+			current_player = remaining_players[current_player_index]
 
 			# If it's the last played person's turn again (as in everyone else passes), the pile gets cleared
-			if last_played_index == current_player_index:
+			if last_played_index == current_player_index and not player_was_removed:
 				top_of_pile = None
 
 			#If player is already done, skip them.
 			if current_player in round_results:
-				current_player_index = (current_player_index + 1) % len(self.players)
+				current_player_index = (current_player_index + 1) % len(remaining_players)
 				continue
 
 			cards_to_play = current_player.play_cards(top_of_pile, is_revolution)
@@ -83,6 +89,7 @@ class Game:
 				else:
 					print("COUNTER-REVOLUTION!")
 
+			player_was_removed = False
 			# If the player decided to play a card, it replaces the top card
 			if cards_to_play:
 				top_of_pile = cards_to_play
@@ -91,22 +98,42 @@ class Game:
 				# If the current player has just played their last card, they are added to the rankings and no longer play
 				if len(current_player.cards) == 0:
 					round_results.append(current_player)
-					print("Player " + current_player.name + " has used all their cards!")
+					remaining_players.remove(current_player)
+					last_played_index = (last_played_index) % len(remaining_players)
+					print(f"Player {current_player.name} has used all their cards!")
 					print("____________________")
+
+					# If prior tycoon doesn't come in first, they auto lose and get placed to Beggar
+					if prior_tycoon and len(round_results) == 1:
+						if prior_tycoon != current_player:
+							prior_tycoon_lost = True
+							remaining_players.remove(prior_tycoon)
+							last_played_index = (last_played_index) % len(remaining_players)
+							print(f"Player {prior_tycoon.name} has gone from Tycoon to Beggar!")
+							print("____________________")
+
+					if len(remaining_players) == 1:
+						last_player = remaining_players[0]
+						round_results.append(last_player)
+						remaining_players.remove(last_player)
+						continue
+
+					player_was_removed = True
+
 
 				# Eight stop: Player who plays an 8 clears the pile, starts a new one, continue is so we don't increment current_player_index
 				if all(c.val == "8" for c in cards_to_play):
 					top_of_pile = None
 					continue
 
+			# If a player was removed, we don't need to increment the current index.
+			if player_was_removed:
+				current_player_index = (current_player_index) % len(remaining_players)
+			else:
+				current_player_index = (current_player_index + 1) % len(remaining_players)
 
-			current_player_index = (current_player_index + 1) % len(self.players)
-
-		# Add last player (didn't use all cards, so not in round_results)
-		for player in self.players:
-			if player not in round_results:
-				round_results.append(player)
-				break
+		if prior_tycoon_lost:
+			round_results.append(prior_tycoon)
 
 		return round_results
 
@@ -184,7 +211,7 @@ class Game:
 			if number_of_rounds_played > 0:
 				self.card_swapping(round_map[number_of_rounds_played - 1])
 
-			round_results = self.round_handling()
+			round_results = self.round_handling(round_map.get(number_of_rounds_played - 1, None))
 			score_map = self.process_round_results(round_results, score_map)
 			round_map = {number_of_rounds_played : round_results}
 			number_of_rounds_played += 1
