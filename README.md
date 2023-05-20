@@ -28,5 +28,5 @@ Persona 5 : Royal has a card game that you can play with the other Phantom Thiev
 - [x] Add the Revolution/Counter Revolution handling whenever 4 of a Kind are played at once.
 - [x] Display the end of round rankings.
 - [x] Add multiple rounds.
-- [ ] Implement the card swapping after the rankings are determined.
+- [x] Implement the card swapping after the rankings are determined.
 - [ ] Force the Tycoon to last in ranking if they don't win the subsequent round.

@@ -16,6 +16,17 @@ def starting_player_index(players):
 	except: raise NameError("No 3 of clubs found")
 	return starting_player_index
 
+def convert_string_to_cards_list(s):
+	if ", " in s:
+		split_by_comma = s.split(", ")
+		split_by_space = [card.split(" ") for card in split_by_comma]
+		cards_list = [Card(card_value, card_suite) for card_value, card_suite in split_by_space]
+	else:
+		split_by_space = s.split(" ")
+		card_value, card_suite = split_by_space
+		cards_list = [Card(card_value, card_suite)]
+	return cards_list
+
 
 class Game:
 	def __init__(self):
@@ -99,30 +110,66 @@ class Game:
 
 		return round_results
 
-	def process_round_results(self, round_results):
+	def card_swapping(self, round_results):
+		n = len(self.players)
+		for i in [0, 1]:
+			winner = round_results[i]
+			loser = round_results[-1-i]
+
+			winner_title = "Tycoon" if i == 0 else "Rich"
+			loser_title = "Beggar" if i == 0 else "Poor"
+			print(f"{winner_title} cards: " + str([str(c.val) + " " + str(c.suit) for c in winner.cards]))
+			print(f"{loser_title} cards: " + str([str(c.val) + " " + str(c.suit) for c in loser.cards]))
+
+			num_to_exchange = "two" if i == 0 else "one"
+			winner_gain = input(f"{winner_title} types {num_to_exchange} card(s) to take from {loser_title}. \n")
+			loser_gain = input(f"{winner_title} types {num_to_exchange} card(s) to discard to {loser_title}. \n")
+			winner_list = convert_string_to_cards_list(winner_gain)
+			loser_list = convert_string_to_cards_list(loser_gain)
+
+			for c in winner_list:
+				winner.add_card(c)
+				loser.remove_card(c)
+
+			for c in loser_list:
+				winner.remove_card(c)
+				loser.add_card(c)
+			print("____________________")
+
+		for p in self.players:
+			p.cards = sorted(p.cards, key = lambda card: (constants.NORMAL_COMPARATOR[card.val], card.suit))
+
+
+	def process_round_results(self, round_results, score_map):
 		# Calculate ranking points
 		max_win_points = 30
 		for i, player in enumerate(round_results):
-			self.score_map[player.name] += (max_win_points - 10 * i)
+			score_map[player.name] += (max_win_points - 10 * i)
 
 		# Current scores
 		print("Round over!")
 		print("____________________")
 		print("Current rankings:")
-		self.leaderboard = sorted(self.score_map.items(), key = lambda x: x[1], reverse = True)
+		self.leaderboard = sorted(score_map.items(), key = lambda x: x[1], reverse = True)
 		for name, score in self.leaderboard:
 			print(name + " scored " + str(score))
 		print("____________________")
+		return score_map
 
 
 	def play_game_with_rounds(self, rounds_to_play):
 		number_of_rounds_played = 0
-		self.score_map = {p.name : 0 for p in self.players}
-
+		score_map = {p.name : 0 for p in self.players}
+		round_map = {}
 		while number_of_rounds_played < rounds_to_play:
 			self.distribute_cards()
+
+			if number_of_rounds_played > 0:
+				self.card_swapping(round_map[number_of_rounds_played - 1])
+
 			round_results = self.round_handling()
-			self.process_round_results(round_results)
+			score_map = self.process_round_results(round_results, score_map)
+			round_map = {number_of_rounds_played : round_results}
 			number_of_rounds_played += 1
 
 		print("GAME OVER!")
