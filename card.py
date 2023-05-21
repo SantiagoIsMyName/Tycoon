@@ -16,10 +16,7 @@ class Card:
 
 		self_val_to_compare = constants.NORMAL_COMPARATOR[self.val]
 		other_val_to_compare = constants.NORMAL_COMPARATOR[other.val]
-		if self_val_to_compare != other_val_to_compare:
-			return self_val_to_compare < other_val_to_compare
-		else:
-			return self.suit < other.suit
+		return self_val_to_compare < other_val_to_compare
 
 	def __le__(self, other):
 		return self.__eq__(other) or self.__lt__(other)
