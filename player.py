@@ -55,25 +55,30 @@ class Player:
 					card_value, card_suite = cards_to_play
 					cards_to_play = [Card(card_value, card_suite)]
 
+				# Check if all cards that were typed are of the same val, try again otherwise.
 				new_card_val = cards_to_play[0].val if cards_to_play else None
-				top_card_val = top_cards[0].val if top_cards else None
-				for c in cards_to_play:
-					if c.val != new_card_val:
+				all_cards_same_val = all([c.val == new_card_val for c in cards_to_play])
+				if not all_cards_same_val:
+					if new_card.val != new_card_val:
 						print("Not all of the cards typed have the same value. Try again.")
 						cards_to_play = None
 						break
 
-					if c not in self.cards:
-						print("One of the cards typed does not exist in this player's hand. Try again.")
-						cards_to_play = None
-						break
+				# Check that all cards are indeed in the player's hand, try again otherwise.
+				all_cards_in_hand = all([c in self.cards for c in cards_to_play])
+				if not all_cards_in_hand:
+					print("One of the cards typed does not exist in this player's hand. Try again.")
+					cards_to_play = None
+					break
 
-					if top_cards:
-						if not is_revolution and NORMAL_COMPARATOR[top_card_val] >= NORMAL_COMPARATOR[c.val]:
+				# Check that new cards trump the top card's value, try again otherwise.
+				if top_cards:
+					for new_card, top_card in zip(cards_to_play, top_cards):
+						if not is_revolution and top_card >= new_card:
 							print("One of the cards typed is not greater than the top card's value. Try again.")
 							cards_to_play = None
 							break
-						if is_revolution and NORMAL_COMPARATOR[top_card_val] <= NORMAL_COMPARATOR[c.val]:
+						if is_revolution and top_card <= new_card:
 							print("One of the cards typed is not smaller than the top card's value. Try again.")
 							cards_to_play = None
 							break

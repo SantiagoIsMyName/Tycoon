@@ -51,7 +51,7 @@ class Game:
 			i += 1
 
 		for p in self.players:
-			p.cards = sorted(p.cards, key = lambda card: (constants.NORMAL_COMPARATOR[card.val], card.suit))
+			p.cards = sorted(p.cards)
 
 	def round_handling(self, previous_round_results):
 		top_of_pile = None
@@ -181,7 +181,7 @@ class Game:
 			print("____________________")
 
 		for p in self.players:
-			p.cards = sorted(p.cards, key = lambda card: (constants.NORMAL_COMPARATOR[card.val], card.suit))
+			p.cards = sorted(p.cards)
 
 
 	def process_round_results(self, round_results, score_map):

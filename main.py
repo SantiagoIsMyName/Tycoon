@@ -1,4 +1,5 @@
 from game import Game
+from player import Player
 
 rounds_requested = int(input("How many rounds would you like to play? \n"))
 print("____________________")
