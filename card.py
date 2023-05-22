@@ -7,6 +7,9 @@ class Card:
 		self.val = val
 		self.suit = suit
 
+	def __hash__(self):
+		return hash((self.val, self.suit))
+
 	def __eq__(self, other):
 		return isinstance(other, Card) and self.val == other.val and self.suit == other.suit
 

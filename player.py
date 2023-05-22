@@ -40,12 +40,6 @@ class Player:
 				# Multi-card handling
 				if ", " in cards_to_play:
 					split_by_comma = cards_to_play.split(", ")
-
-					if top_cards != None and len(split_by_comma) != len(top_cards):
-						print("The number of cards typed does not match the number of cards on the top. Try again.")
-						cards_to_play = None
-						continue
-
 					split_by_space = [card.split(" ") for card in split_by_comma]
 					cards_to_play = [Card(card_value, card_suite) for card_value, card_suite in split_by_space]
 
@@ -55,24 +49,37 @@ class Player:
 					card_value, card_suite = cards_to_play
 					cards_to_play = [Card(card_value, card_suite)]
 
-				# Check if all cards that were typed are of the same val, try again otherwise.
-				new_card_val = cards_to_play[0].val if cards_to_play else None
-				all_cards_same_val = all([c.val == new_card_val for c in cards_to_play])
-				if not all_cards_same_val:
-					if new_card.val != new_card_val:
-						print("Not all of the cards typed have the same value. Try again.")
-						cards_to_play = None
-						break
 
 				# Check that all cards are indeed in the player's hand, try again otherwise.
 				all_cards_in_hand = all([c in self.cards for c in cards_to_play])
 				if not all_cards_in_hand:
 					print("One of the cards typed does not exist in this player's hand. Try again.")
 					cards_to_play = None
-					break
+					continue
 
-				# Check that new cards trump the top card's value, try again otherwise.
+				# Check if all cards that were typed are of the same val, try again otherwise.
+				new_card_val = cards_to_play[0].val if cards_to_play else None
+				all_cards_same_val = all([c.val == new_card_val for c in cards_to_play])
+				if not all_cards_same_val:
+					print("Not all of the cards typed have the same value. Try again.")
+					cards_to_play = None
+					continue
+
+				# Check all cards are unique and non-repeating.
+				if len(cards_to_play) != len(set(cards_to_play)):
+					print("One of the cards typed is repeated. Try again.")
+					cards_to_play = None
+					continue
+
+				# If top cards, check len of typed cards vs len of top cards + check all typed cards trump new cards.
 				if top_cards:
+					# Check that len of top cards matches the len of cards typed, try again otherwise.
+					if len(cards_to_play) != len(top_cards):
+						print("The number of cards typed does not match the number of cards on the top. Try again.")
+						cards_to_play = None
+						continue
+
+					# Check that each new card trump the top card's value, try again otherwise.
 					for new_card, top_card in zip(cards_to_play, top_cards):
 						if not is_revolution and top_card >= new_card:
 							print("One of the cards typed is not greater than the top card's value. Try again.")
