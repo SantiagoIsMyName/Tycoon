@@ -132,39 +132,49 @@ class Game:
 			winner = round_results[i]
 			loser = round_results[-1-i]
 
-			winner_title = "Tycoon" if i == 0 else "Rich"
-			loser_title = "Beggar" if i == 0 else "Poor"
+			winner_title = constants.TYCOON if i == 0 else constants.RICH
+			loser_title = constants.BEGGAR if i == 0 else constants.POOR
 			print(f"{winner_title} (Player {winner.name}) cards: " + str([str(c.val) + " " + str(c.suit) for c in winner.cards]))
 			print(f"{loser_title} (Player {loser.name}) cards: " + str([str(c.val) + " " + str(c.suit) for c in loser.cards]))
 
-			num_to_exchange = "two" if i == 0 else "one"
+			num_to_exchange = 2 if i == 0 else 1
 			while True:
-				winner_gain = input(f"{winner_title} types {num_to_exchange} card(s) to take from {loser_title}. \n")
-				loser_gain = input(f"{winner_title} types {num_to_exchange} card(s) to discard to {loser_title}. \n")
-				winner_list = convert_string_to_cards_list(winner_gain)
-				loser_list = convert_string_to_cards_list(loser_gain)
+				winner_input = input(f"{winner_title} types {num_to_exchange} card(s) to take from {loser_title}. \n")
+				loser_input = input(f"{winner_title} types {num_to_exchange} card(s) to discard to {loser_title}. \n")
+				winner_gain = convert_string_to_cards_list(winner_input)
+				loser_gain = convert_string_to_cards_list(loser_input)
 
 				# Check lengths of inputs are correct
-				if i == 0:
-					lengths_match = len(winner_list) == 2 and len(loser_list) == 2
-				else:
-					lengths_match = len(winner_list) == 1 and len(loser_list) == 1
+				lengths_match = len(winner_gain) == num_to_exchange and len(loser_gain) == num_to_exchange
+				if not lengths_match:
+					print("The suggested swap does not have the correct size. Try again")
+					continue
 
 				# Check that all inputed cards are indeed in each player's hands
-				loser_has_cards = all([c in loser.cards for c in winner_list])
-				winner_has_cards = all([c in winner.cards for c in loser_list])
+				loser_has_cards = all([c in loser.cards for c in winner_gain])
+				winner_has_cards = all([c in winner.cards for c in loser_gain])
+				all_cards_present = loser_has_cards and winner_has_cards
+				if not all_cards_present:
+					print("The suggested swap has cards that aren't present in someone's hands. Try again")
+					continue
 
-				# If lenghts are correct and all cards are present, exit
-				if lengths_match and loser_has_cards and winner_has_cards:
+				# Check that cards are all unique / no repeating cards.
+				loser_cards_unique = len(loser_gain) == len(set(loser_gain))
+				winner_cards_unique = len(winner_gain) == len(set(winner_gain))
+				all_cards_unique = loser_cards_unique and winner_cards_unique
+				if not all_cards_unique:
+					print("The suggested swap repeats cards. Try again")
+					continue
+
+				# If lenghts are correct, all cards are present, and all cards are unique, exit
+				if lengths_match and all_cards_present and all_cards_unique:
 					break
-				else:
-					print("Error. The suggested swap is invalid. Try again.")
 
-			for c in winner_list:
+			for c in winner_gain:
 				winner.add_card(c)
 				loser.remove_card(c)
 
-			for c in loser_list:
+			for c in loser_gain:
 				winner.remove_card(c)
 				loser.add_card(c)
 			print("____________________")
