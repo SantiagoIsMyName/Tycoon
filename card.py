@@ -19,10 +19,25 @@ class Card:
 		return self_val_to_compare < other_val_to_compare
 
 	def __le__(self, other):
-		return self.__eq__(other) or self.__lt__(other)
+		if not isinstance(other, Card):
+			raise NameError("Comparing Card to non-card object")
+
+		self_val_to_compare = constants.NORMAL_COMPARATOR[self.val]
+		other_val_to_compare = constants.NORMAL_COMPARATOR[other.val]
+		return self_val_to_compare <= other_val_to_compare
 
 	def __gt__(self, other):
-		return not self.__lt__(other)
+		if not isinstance(other, Card):
+			raise NameError("Comparing Card to non-card object")
+
+		self_val_to_compare = constants.NORMAL_COMPARATOR[self.val]
+		other_val_to_compare = constants.NORMAL_COMPARATOR[other.val]
+		return self_val_to_compare > other_val_to_compare
 
 	def __ge__(self, other):
-		return self.__eq__(other) or self.__gt__(other)
+		if not isinstance(other, Card):
+			raise NameError("Comparing Card to non-card object")
+			
+		self_val_to_compare = constants.NORMAL_COMPARATOR[self.val]
+		other_val_to_compare = constants.NORMAL_COMPARATOR[other.val]
+		return self_val_to_compare >= other_val_to_compare
