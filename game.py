@@ -1,8 +1,9 @@
-from player import Player
 from card import Card
+from helper import convert_string_to_cards_list
+from player import Player
 
-import random
 import constants
+import random
 
 THREE_OF_CLUBS = Card("3", constants.CLUBS)
 
@@ -15,18 +16,6 @@ def starting_player_index(players):
 	try: starting_player_index = next(i for i, player in enumerate(players) if THREE_OF_CLUBS in player.cards)
 	except: raise NameError("No 3 of clubs found")
 	return starting_player_index
-
-def convert_string_to_cards_list(s):
-	if ", " in s:
-		split_by_comma = s.split(", ")
-		split_by_space = [card.split(" ") for card in split_by_comma]
-		cards_list = [Card(card_value, card_suite) for card_value, card_suite in split_by_space]
-	else:
-		split_by_space = s.split(" ")
-		card_value, card_suite = split_by_space
-		cards_list = [Card(card_value, card_suite)]
-	return cards_list
-
 
 class Game:
 	def __init__(self):

@@ -1,9 +1,9 @@
-import constants
+from constants import NORMAL_ORDERING, CARD_SUITS, NORMAL_COMPARATOR
 
 class Card:
 	def __init__(self, val, suit):
-		assert val in constants.NORMAL_ORDERING
-		assert suit in constants.CARD_SUITS
+		assert val in NORMAL_ORDERING
+		assert suit in CARD_SUITS
 		self.val = val
 		self.suit = suit
 
@@ -17,30 +17,30 @@ class Card:
 		if not isinstance(other, Card):
 			raise NameError("Comparing Card to non-card object")
 
-		self_val_to_compare = constants.NORMAL_COMPARATOR[self.val]
-		other_val_to_compare = constants.NORMAL_COMPARATOR[other.val]
+		self_val_to_compare = NORMAL_COMPARATOR[self.val]
+		other_val_to_compare = NORMAL_COMPARATOR[other.val]
 		return self_val_to_compare < other_val_to_compare
 
 	def __le__(self, other):
 		if not isinstance(other, Card):
 			raise NameError("Comparing Card to non-card object")
 
-		self_val_to_compare = constants.NORMAL_COMPARATOR[self.val]
-		other_val_to_compare = constants.NORMAL_COMPARATOR[other.val]
+		self_val_to_compare = NORMAL_COMPARATOR[self.val]
+		other_val_to_compare = NORMAL_COMPARATOR[other.val]
 		return self_val_to_compare <= other_val_to_compare
 
 	def __gt__(self, other):
 		if not isinstance(other, Card):
 			raise NameError("Comparing Card to non-card object")
 
-		self_val_to_compare = constants.NORMAL_COMPARATOR[self.val]
-		other_val_to_compare = constants.NORMAL_COMPARATOR[other.val]
+		self_val_to_compare = NORMAL_COMPARATOR[self.val]
+		other_val_to_compare = NORMAL_COMPARATOR[other.val]
 		return self_val_to_compare > other_val_to_compare
 
 	def __ge__(self, other):
 		if not isinstance(other, Card):
 			raise NameError("Comparing Card to non-card object")
 			
-		self_val_to_compare = constants.NORMAL_COMPARATOR[self.val]
-		other_val_to_compare = constants.NORMAL_COMPARATOR[other.val]
+		self_val_to_compare = NORMAL_COMPARATOR[self.val]
+		other_val_to_compare = NORMAL_COMPARATOR[other.val]
 		return self_val_to_compare >= other_val_to_compare

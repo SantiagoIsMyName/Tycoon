@@ -1,5 +1,5 @@
 from constants import NORMAL_COMPARATOR
-from card import Card
+from helper import convert_string_to_cards_list
 
 class Player:
 	def __init__(self, name):
@@ -28,27 +28,15 @@ class Player:
 		cards_to_play = None
 		# Keep looping until a valid card is selected or the player passes
 		while cards_to_play == None:
-			cards_to_play = input("Type a card to play or type p to pass. If playing more than one card, split by commas and a space. \n")
+			typed_input = input("Type a card to play or type p to pass. If playing more than one card, split by commas and a space. \n")
 
 			# Pass logic
-			if cards_to_play == 'p' or cards_to_play == "":
-				cards_to_play = None
+			if typed_input == 'p' or typed_input == "":
 				break
 
 			# Card selecting verifying logic
 			else:
-				# Multi-card handling
-				if ", " in cards_to_play:
-					split_by_comma = cards_to_play.split(", ")
-					split_by_space = [card.split(" ") for card in split_by_comma]
-					cards_to_play = [Card(card_value, card_suite) for card_value, card_suite in split_by_space]
-
-				#Single card handling
-				else:
-					cards_to_play = cards_to_play.split(" ")
-					card_value, card_suite = cards_to_play
-					cards_to_play = [Card(card_value, card_suite)]
-
+				cards_to_play = convert_string_to_cards_list(typed_input)
 
 				# Check that all cards are indeed in the player's hand, try again otherwise.
 				all_cards_in_hand = all([c in self.cards for c in cards_to_play])
