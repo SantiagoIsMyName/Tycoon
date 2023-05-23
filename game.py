@@ -1,5 +1,5 @@
 from card import Card
-from helper import convert_string_to_cards_list
+from helper import convert_string_to_cards_list, print_a_line
 from player import Player
 
 import constants
@@ -90,7 +90,7 @@ class Game:
 					remaining_players.remove(current_player)
 					last_played_index = (last_played_index) % len(remaining_players)
 					print(f"Player {current_player.name} has used all their cards!")
-					print("____________________")
+					print_a_line()
 
 					# If prior tycoon doesn't come in first, they auto lose and get placed to Beggar
 					if prior_tycoon and len(round_results) == 1:
@@ -99,7 +99,7 @@ class Game:
 							remaining_players.remove(prior_tycoon)
 							last_played_index = (last_played_index) % len(remaining_players)
 							print(f"Player {prior_tycoon.name} has gone from Tycoon to Beggar!")
-							print("____________________")
+							print_a_line()
 
 					if len(remaining_players) == 1:
 						last_player = remaining_players[0]
@@ -177,7 +177,7 @@ class Game:
 			for c in loser_gain:
 				winner.remove_card(c)
 				loser.add_card(c)
-			print("____________________")
+			print_a_line()
 
 		for p in self.players:
 			p.cards = sorted(p.cards)
@@ -191,12 +191,12 @@ class Game:
 
 		# Current scores
 		print("Round over!")
-		print("____________________")
+		print_a_line()
 		print("Current rankings:")
 		self.leaderboard = sorted(score_map.items(), key = lambda x: x[1], reverse = True)
 		for name, score in self.leaderboard:
 			print(name + " scored " + str(score))
-		print("____________________")
+		print_a_line()
 		return score_map
 
 
