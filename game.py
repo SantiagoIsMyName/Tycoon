@@ -134,8 +134,8 @@ class Game:
 
 			winner_title = constants.TYCOON if i == 0 else constants.RICH
 			loser_title = constants.BEGGAR if i == 0 else constants.POOR
-			print(f"{winner_title} (Player {winner.name}) cards: " + str([str(c.val) + " " + str(c.suit) for c in winner.cards]))
-			print(f"{loser_title} (Player {loser.name}) cards: " + str([str(c.val) + " " + str(c.suit) for c in loser.cards]))
+			print(f"{winner_title} (Player {winner.name}) cards: {[str(c) for c in winner.cards]}")
+			print(f"{loser_title} (Player {loser.name}) cards: {[str(c) for c in loser.cards]}")
 
 			num_to_exchange = 2 if i == 0 else 1
 			while True:
@@ -195,7 +195,7 @@ class Game:
 		print("Current rankings:")
 		self.leaderboard = sorted(score_map.items(), key = lambda x: x[1], reverse = True)
 		for name, score in self.leaderboard:
-			print(name + " scored " + str(score))
+			print(f"{name} scored {score}")
 		print_a_line()
 		return score_map
 

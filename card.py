@@ -7,6 +7,9 @@ class Card:
 		self.val = val
 		self.suit = suit
 
+	def __str__(self):
+		return f"{self.val} {self.suit}"
+
 	def __hash__(self):
 		return hash((self.val, self.suit))
 

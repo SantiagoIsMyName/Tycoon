@@ -36,7 +36,7 @@ class Player:
 			print("One of the cards typed is repeated. Try again.")
 			return False
 
-		# If top cards, check len of typed cards vs len of top cards + check all typed cards trump new cards.
+		# If top cards, check len of typed cards vs len of top cards and check all typed cards trump new cards.
 		if top_cards:
 			# Check that len of top cards matches the len of cards typed, try again otherwise.
 			if len(cards_to_test) != len(top_cards):
@@ -57,12 +57,12 @@ class Player:
 
 	def play_cards(self, top_cards, is_revolution):
 		# Display relevant information
-		print("Current player: " + self.name)
+		print(f"Current player: {self.name}")
 		if top_cards != None:
-			print("Current top card(s): " + str([str(c.val) + " " + str(c.suit) for c in top_cards]))
+			print(f"Current top card(s): {[str(c) for c in top_cards]}")
 		else:
 			print("No top card. This is the start of a new stack.")
-		print("Card(s) available: " + str([c.val + " " + c.suit for c in self.cards]))
+		print(f"Card(s) available: {[str(c) for c in self.cards]}")
 
 		cards_to_play = None
 		# Keep looping until a valid card is selected or the player passes

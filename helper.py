@@ -12,3 +12,6 @@ def convert_string_to_cards_list(s):
 		split_by_space = s.split(" ")
 		card_value, card_suite = split_by_space
 		return [Card(card_value, card_suite)]
+
+def print_a_line():
+	print("____________________")
